@@ -11,12 +11,40 @@ datasource db {
 }
 
 model User {
-  id Int @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   email String
-  hash String
+  hash  String
+  name String
+
+  chatRooms Room[]
+  suggested User[] @relation("Suggestions")
+  suggestedTo User[] @relation("Suggestions")
 
   imgSrc String?
+}
+
+model Room {
+  id        BigInt   @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  users    User[]
+  messages Message[]
+}
+
+model Message {
+  id        BigInt   @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  message String
+
+  room   Room   @relation(fields: [roomId], references: [id])
+  roomId BigInt
+
+  senderId   Int
+  recieverId Int
 }
